@@ -1,31 +1,27 @@
-# import requests
+from vector_store import SimpleVectorStore
+import os
 
-# url = "https://arxiv.org/pdf/2402.16840"
-# response = requests.get(url, headers={"User-Agent": "Mozilla/5.0"})
+pdf_path = "data\mobilllama-1-6.pdf"
+store_file = "vector_store.pkl"
 
-# with open("data/mobilllama.pdf", "wb") as f:
-#     f.write(response.content)
-# from pathlib import Path
+store = SimpleVectorStore()
 
-#loading pdf
-from llama_index.readers.file import PyMuPDFReader
+if os.path.exists(store_file):
+    print("🔁 Loading saved vector store...")
+    store.load(store_file)
+else:
+    print("📄 Reading and embedding PDF...")
+    chunks = store.load_pdf(pdf_path)
+    store.build_index(chunks)
+    store.save(store_file)
+    print("✅ Saved vector store to disk.")
 
-loader = PyMuPDFReader()
-documents = loader.load(file_path="./data/mobilllama.pdf")
-
-#spliting pdf into chunks (nodes)
-from llama_index.core.node_parser import SentenceSplitter
-
-node_parser = SentenceSplitter(chunk_size=256)
-nodes = node_parser.get_nodes_from_documents(documents) #list of chunks of doc, each ready to be embedded
-
-#gen actual emdeddings of node content
-from llama_index.embeddings.openai import OpenAIEmbedding
-
-embed_model = OpenAIEmbedding()
-
-for node in nodes:
-    node_embedding = embed_model.get_text_embedding(
-        node.get_content(metadata_mode="all")
-    )
-    node.embedding = node_embedding
+# Example query
+while True:
+    question = input("\nAsk a question (or 'exit'): ")
+    if question.lower() == "exit":
+        break
+    results = store.query(question)
+    print("\nTop results:")
+    for score, chunk in results:
+        print(f"\n[Score: {score:.4f}]\n{chunk.strip()[:300]}")
