@@ -1,0 +1,32 @@
+# import requests
+
+# url = "https://arxiv.org/pdf/2402.16840"
+# response = requests.get(url, headers={"User-Agent": "Mozilla/5.0"})
+
+# with open("data/mobilllama.pdf", "wb") as f:
+#     f.write(response.content)
+# from pathlib import Path
+
+#loading pdf
+from llama_index.readers.file import PyMuPDFReader
+
+loader = PyMuPDFReader()
+documents = loader.load(file_path="./data/mobilllama.pdf")
+
+#spliting pdf into chunks (nodes)
+from llama_index.core.node_parser import SentenceSplitter
+
+node_parser = SentenceSplitter(chunk_size=256)
+nodes = node_parser.get_nodes_from_documents(documents) #list of chunks of doc, each ready to be embedded
+
+#gen actual emdeddings of node content
+from llama_index.embeddings.openai import OpenAIEmbedding
+
+embed_model = OpenAIEmbedding()
+
+
+for node in nodes:
+    node_embedding = embed_model.get_text_embedding(
+        node.get_content(metadata_mode="all")
+    )
+    node.embedding = node_embedding
