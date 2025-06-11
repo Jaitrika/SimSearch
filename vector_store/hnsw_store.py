@@ -27,7 +27,6 @@ class HNSWVectorStore:
         self.index.add_items(embeddings, list(range(len(chunks))))
         self.index.set_ef(50)
 
-
     def query(self, question: str, top_k=3):
         query_vector = self.model.encode(question)
         labels, distances = self.index.knn_query(query_vector, k=top_k)
@@ -37,7 +36,6 @@ class HNSWVectorStore:
     def save(self, filepath="vector_store_hnsw.pkl"):
         with open(filepath, "wb") as f:
             pickle.dump((self.index, self.texts), f)
-
 
     def load(self, filepath="vector_store_hnsw.pkl"):
         with open(filepath, "rb") as f:

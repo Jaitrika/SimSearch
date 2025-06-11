@@ -1,6 +1,6 @@
 import time
-from brute_store import SimpleVectorStore 
-from hnsw_store import HNSWVectorStore
+from vector_store.brute_store import SimpleVectorStore 
+from vector_store.hnsw_store import HNSWVectorStore
 
 pdf_path = "data/mobilllama-1-6.pdf"
 queries = [
