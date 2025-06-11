@@ -24,11 +24,11 @@ class SimpleVectorStore:
     def build_index(self, chunks: List[str]):
         self.embeddings = [(chunk, self.model.encode(chunk).tolist()) for chunk in chunks]
 
-    def save(self, filepath="vector_store.pkl"):
+    def save(self, filepath="vector_store_brute.pkl"):
         with open(filepath, "wb") as f:
             pickle.dump(self.embeddings, f)
 
-    def load(self, filepath="vector_store.pkl"):
+    def load(self, filepath="vector_store_brute.pkl"):
         with open(filepath, "rb") as f:
             self.embeddings = pickle.load(f)
 

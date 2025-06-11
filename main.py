@@ -1,11 +1,18 @@
-from vector_store import SimpleVectorStore
+from brute_store import SimpleVectorStore 
+from hnsw_store import HNSWVectorStore
+
 import os
 
-pdf_path = "data\mobilllama-1-6.pdf"
-store_file = "vector_store.pkl"
+pdf_path = "data\\mobilllama-1-6.pdf"
 
-store = SimpleVectorStore()
+# Choose the vector store
+use_hnsw = input("Use HNSW? (y/n): ").lower() == 'y'
 
+# Set the correct file and class based on choice
+store_file = "vector_store_hnsw.pkl" if use_hnsw else "vector_store_brute.pkl"
+store = HNSWVectorStore() if use_hnsw else SimpleVectorStore()
+
+# Load or build
 if os.path.exists(store_file):
     print("🔁 Loading saved vector store...")
     store.load(store_file)
@@ -16,7 +23,7 @@ else:
     store.save(store_file)
     print("✅ Saved vector store to disk.")
 
-# Example query
+# Query loop
 while True:
     question = input("\nAsk a question (or 'exit'): ")
     if question.lower() == "exit":
