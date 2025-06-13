@@ -11,7 +11,6 @@ class HNSWVectorStore:
         self.index = hnswlib.Index(space='cosine', dim=dim)
         self.chunk_texts: List[str] = []
         self.dim = dim
-        self.index_inited = False
 
     def load_pdf(self, path: str, chunk_size=200) -> List[str]:
         doc = fitz.open(path)
