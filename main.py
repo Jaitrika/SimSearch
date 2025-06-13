@@ -3,7 +3,7 @@ from vector_store.hnsw_store import HNSWVectorStore
 
 import os
 
-pdf_path = "data\\mobilllama-1-6.pdf"
+pdf_path = "data\\ai_paragraph.pdf"
 
 # Choose the vector store
 use_hnsw = input("Use HNSW? (y/n): ").lower() == 'y'
