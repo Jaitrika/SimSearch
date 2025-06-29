@@ -6,7 +6,7 @@ import torch.nn.functional as F
 # Example: Using SNLI for open-domain sentence pairs
 dataset = load_dataset("snli", split="train")
 sentences = list(set([x["premise"] for x in dataset if x["premise"] is not None]))
-sentences = sentences[:10000]  # Optional: truncate for fast testing
+sentences = sentences[:10000]  # limiting for fast testing
 
 class SimCSE(torch.nn.Module):
     def __init__(self, model_name):
@@ -17,7 +17,7 @@ class SimCSE(torch.nn.Module):
     def forward(self, **kwargs):
         output = self.encoder(**kwargs)
         return output.last_hidden_state[:, 0]  # CLS token
-                                                #output.last_hidden_state has shape (batch_size, sequence_length, x).
+                                                #output.last_hidden_state has shape (batch_size, sequence_length, hidden_size).
                                             #[:, 0] slices out the CLS token representation from each sentence — 
                                             # this becomes the sentence embedding.
     
@@ -30,7 +30,6 @@ def get_positive_pairs(batch, tokenizer, device):
     emb2 = model(**encoded2)
 
     return emb1, emb2
-
     
 def simcse_loss(emb1, emb2, temperature=0.05):
     emb1 = F.normalize(emb1, p=2, dim=1)

@@ -16,7 +16,7 @@ def load_custom_simcse(model_path="simcse_minilm.pt", model_name="sentence-trans
             texts = [texts]
         with torch.no_grad():
             encoded = tokenizer(texts, padding=True, truncation=True, return_tensors="pt").to(device)
-            embeddings = model(**encoded)  # (batch, hidden_size)
+            embeddings = model(input_ids=encoded["input_ids"], attention_mask=encoded["attention_mask"]) #will indirectly call forward func
             return embeddings.cpu().numpy()
     
     return embed
