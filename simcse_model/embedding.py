@@ -4,7 +4,7 @@ from simcse_model.SimCSE import SimCSE
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 def load_custom_simcse(model_path="simcse_minilm.pt", model_name="sentence-transformers/all-MiniLM-L6-v2"):
-    print("Loaded model ✅")
+    print("Loaded model")
     model = SimCSE(model_name)
     model.load_state_dict(torch.load(model_path, map_location=device))
     model.to(device)

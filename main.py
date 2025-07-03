@@ -3,7 +3,7 @@ from vector_store.hnsw_store import HNSWVectorStore
 
 import os
 
-pdf_path = "data\\ai_paragraph.pdf"
+pdf_path = "data\\test_f1.pdf"
 
 # Choose the vector store
 use_hnsw = input("Use HNSW? (y/n): ").lower() == 'y'
@@ -14,14 +14,14 @@ store = HNSWVectorStore() if use_hnsw else SimpleVectorStore()
 
 # Load or build
 if os.path.exists(store_file):
-    print("🔁 Loading saved vector store...")
+    print("Loading saved vector store...")
     store.load(store_file)
 else:
-    print("📄 Reading and embedding PDF...")
+    print("Reading and embedding PDF...")
     chunks = store.load_pdf(pdf_path)
     store.build_index(chunks)
     store.save(store_file)
-    print("✅ Saved vector store to disk.")
+    print("Saved vector store to disk.")
 
 # Query loop
 while True:
